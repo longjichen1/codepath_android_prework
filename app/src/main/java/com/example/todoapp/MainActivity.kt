@@ -16,18 +16,29 @@ class MainActivity : AppCompatActivity() {
 
     var listOfTasks = mutableListOf<String>()
     lateinit var adapter: TaskItemAdapter
+
+    var listOfCards = mutableListOf<TaskCard>()
+    lateinit var adapter2: TaskCardAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         loadItems()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val onLongClickListener = object : TaskItemAdapter.OnLongClickListener {
-            override fun onItemLongClicked(position: Int) {
+        val onLongClickListener2 = object : TaskCardAdapter.OnLongClickListener {
+            override fun onCardLongClicked(position: Int) {
+                // Edit card
+                saveItems()
+            }
+        }
+
+        val onDeleteListener = object : TaskCardAdapter.OnDeleteListener {
+            override fun onCardLongClicked(position: Int) {
                 // 1. Remove item from list
-                listOfTasks.removeAt(position)
+                listOfCards.removeAt(position)
 
                 // 2. Notify adapter
-                adapter.notifyDataSetChanged()
+                adapter2.notifyDataSetChanged()
 
                 // 3. Save File
                 saveItems()
@@ -37,29 +48,47 @@ class MainActivity : AppCompatActivity() {
         // Look up recyclerView in layout
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         // Create adapter passing in the sample user data
-        adapter = TaskItemAdapter(listOfTasks, onLongClickListener)
-
-        recyclerView.adapter = adapter
+        adapter2 = TaskCardAdapter(listOfCards, onLongClickListener2, onDeleteListener)
+        recyclerView.adapter = adapter2
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Set up input field
         val inputTextField = findViewById<EditText>(R.id.addTaskField)
+        val inputMonth = findViewById<EditText>(R.id.editTextMonth)
+        val inputDay= findViewById<EditText>(R.id.editTextDate)
+        val inputYear = findViewById<EditText>(R.id.editTextYear)
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        // Clear All Tasks
+        findViewById<Button>(R.id.clearTasks).setOnClickListener{
+//            listOfTasks.clear()
+//            adapter.notifyDataSetChanged()
+            listOfCards.clear()
+            adapter2.notifyDataSetChanged()
+        }
+
+        // Adds Data
+        findViewById<Button>(R.id.addContent).setOnClickListener {
             // 1. Grab text inputted into @id/addTaskField
             val userInputtedTask = inputTextField.text.toString()
-
-            // 2. Add the string to our list of tasks: listofTasks
-            listOfTasks.add(userInputtedTask)
-
-            // Notify Adapter
-            adapter.notifyItemInserted(listOfTasks.size-1)
-
-            // 3. Reset text field
-            inputTextField.setText("")
-
-            // 4. Save File
-            saveItems()
+            if (userInputtedTask.isNotEmpty() && (inputMonth.text.toString().toIntOrNull()?:-1 != -1
+                        || inputMonth.text.toString().isEmpty())){
+                val card = TaskCard(userInputtedTask, inputDay.text.toString().toIntOrNull()?:-1,
+                    inputMonth.text.toString().toIntOrNull()?:-1,
+                    inputYear.text.toString().toIntOrNull()?:-1);
+                // 2. Add the string to our list of tasks: listofTasks
+                listOfTasks.add(userInputtedTask)
+                listOfCards.add(card)
+                // Notify Adapter
+//            adapter.notifyItemInserted(listOfTasks.size-1)
+                adapter2.notifyItemInserted(listOfCards.size-1)
+                // 3. Reset text field
+                inputTextField.setText("")
+                inputDay.setText("")
+                inputMonth.setText("")
+                inputYear.setText("")
+                // 4. Save File
+                saveItems()
+            }
         }
     }
     // Save data that user inputted
@@ -76,6 +105,7 @@ class MainActivity : AppCompatActivity() {
     fun loadItems() {
         try{
             listOfTasks = FileUtils.readLines(getDataFile(), Charset.defaultCharset())
+            getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){
             ioException.printStackTrace()
         }
@@ -84,7 +114,8 @@ class MainActivity : AppCompatActivity() {
     // Save items by writing them into our data file
     fun saveItems() {
         try{
-            FileUtils.writeLines(getDataFile(), listOfTasks)
+            FileUtils.writeLines(getDataFile(), listOfCards)
+            getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){
             ioException.printStackTrace()
         }

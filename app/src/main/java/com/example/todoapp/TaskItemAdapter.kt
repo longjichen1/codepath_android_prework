@@ -1,5 +1,4 @@
 package com.example.todoapp
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ class TaskItemAdapter (val listOfItems : List<String>,
         val context = parent.context;
         val inflater = LayoutInflater.from(context)
         //inflate the custom layout
-        val contactView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
+        val contactView = inflater.inflate(android.R.layout.simple_list_item_2, parent, false)
         //return a new holder instance
         return ViewHolder(contactView);
     }
