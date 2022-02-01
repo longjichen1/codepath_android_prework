@@ -1,10 +1,12 @@
 package com.example.todoapp
 
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.io.FileUtils
@@ -20,7 +22,14 @@ class MainActivity : AppCompatActivity() {
     var listOfCards = mutableListOf<TaskCard>()
     lateinit var adapter2: TaskCardAdapter
 
+
+    lateinit var helper: MyDBHelper
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        helper = MyDBHelper(applicationContext)
+        var db = helper.readableDatabase
+
         loadItems()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -78,6 +87,12 @@ class MainActivity : AppCompatActivity() {
                 // 2. Add the string to our list of tasks: listofTasks
                 listOfTasks.add(userInputtedTask)
                 listOfCards.add(card)
+                var cv = ContentValues()
+                cv.put("TASK", card.task)
+                cv.put("DAY", card.day)
+                cv.put("MONTH", card.month)
+                cv.put("YEAR", card.year)
+                db.insert("TASKCARDS", null, cv)
                 // Notify Adapter
 //            adapter.notifyItemInserted(listOfTasks.size-1)
                 adapter2.notifyItemInserted(listOfCards.size-1)
@@ -104,7 +119,20 @@ class MainActivity : AppCompatActivity() {
     // Load the items by reading every line in the data file
     fun loadItems() {
         try{
-            listOfTasks = FileUtils.readLines(getDataFile(), Charset.defaultCharset())
+
+            val selectQuery = "SELECT * FROM TASKCARDS"
+            val ds = helper.writableDatabase
+            val cursor = ds.rawQuery(selectQuery, null)
+            print("hi")
+            if (cursor.moveToFirst()){
+                listOfCards.clear()
+                do{
+                    listOfCards.add(TaskCard(cursor.getString(0), cursor.getInt(1), cursor.getInt(2), cursor.getInt(3)))
+                }while(cursor.moveToNext())
+
+            }
+
+//            listOfTasks = FileUtils.readLines(getDataFile(), Charset.defaultCharset())
             getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){
             ioException.printStackTrace()
@@ -114,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     // Save items by writing them into our data file
     fun saveItems() {
         try{
+
             FileUtils.writeLines(getDataFile(), listOfCards)
             getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){

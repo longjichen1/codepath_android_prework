@@ -1,6 +1,6 @@
 package com.example.todoapp
 
-class TaskCard (val task: String, val day: Int, val month: Int, val year: Int){
+class TaskCard (var task: String, var day: Int, var month: Int, var year: Int){
 
 
 }
