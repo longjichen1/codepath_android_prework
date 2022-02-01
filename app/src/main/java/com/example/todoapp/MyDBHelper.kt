@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class MyDBHelper(context:Context) : SQLiteOpenHelper(context, "USERDB", null, 1){
+class MyDBHelper(context:Context) : SQLiteOpenHelper(context, "TASKCARDS", null, 1){
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE TASKCARDS(TASKCARDID INTEGER PRIMARY KEY AUTOINCREMENT, TASK TEXT, DAY TEXT, MONTH TEXT, YEAR TEXT)")
 

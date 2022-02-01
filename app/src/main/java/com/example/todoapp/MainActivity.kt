@@ -3,6 +3,7 @@ package com.example.todoapp
 import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 
 import android.widget.Button
 import android.widget.EditText
@@ -44,8 +45,17 @@ class MainActivity : AppCompatActivity() {
         val onDeleteListener = object : TaskCardAdapter.OnDeleteListener {
             override fun onCardLongClicked(position: Int) {
                 // 1. Remove item from list
-                listOfCards.removeAt(position)
+                val wdb = helper.writableDatabase
+                val currentCard = listOfCards[position]
+                val tasks: String = currentCard.task
+                val days = currentCard.day
+                val months = currentCard.month
+                val years = currentCard.year
+                wdb.delete("TASKCARDS", "TASK='$tasks' and DAY='$days' and MONTH='$months' and YEAR='$years'", null)
+                loadItems()
+                Log.i("Hi", tasks)
 
+//                wdb.delete("TASKCARDS", "TASK=?", arrayOf(task))
                 // 2. Notify adapter
                 adapter2.notifyDataSetChanged()
 
@@ -72,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 //            listOfTasks.clear()
 //            adapter.notifyDataSetChanged()
             listOfCards.clear()
+            db.execSQL("delete from "+ "TASKCARDS");
             adapter2.notifyDataSetChanged()
         }
 
@@ -88,6 +99,7 @@ class MainActivity : AppCompatActivity() {
                 listOfTasks.add(userInputtedTask)
                 listOfCards.add(card)
                 var cv = ContentValues()
+
                 cv.put("TASK", card.task)
                 cv.put("DAY", card.day)
                 cv.put("MONTH", card.month)
@@ -119,15 +131,15 @@ class MainActivity : AppCompatActivity() {
     // Load the items by reading every line in the data file
     fun loadItems() {
         try{
-
+            listOfCards.clear()
             val selectQuery = "SELECT * FROM TASKCARDS"
             val ds = helper.writableDatabase
             val cursor = ds.rawQuery(selectQuery, null)
-            print("hi")
+
             if (cursor.moveToFirst()){
-                listOfCards.clear()
+
                 do{
-                    listOfCards.add(TaskCard(cursor.getString(0), cursor.getInt(1), cursor.getInt(2), cursor.getInt(3)))
+                    listOfCards.add(TaskCard(cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)))
                 }while(cursor.moveToNext())
 
             }
