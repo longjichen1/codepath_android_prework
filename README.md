@@ -4,7 +4,7 @@
 
 Submitted by: **Longji Jerry Chen**
 
-Time spent: **33** hours spent in total (Excluding roughly 2-4 hours helping others on the Slack)
+Time spent: **33** hours spent in total (Excluding roughly 2-3 hours helping others on the Slack)
 
 ## User Stories
 
