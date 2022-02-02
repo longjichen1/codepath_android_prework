@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout
+    android:allowBackup="false"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Task"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:layout_marginBottom="5dp"/>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/editCard"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="@color/teal_200"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTaskField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="9"
+                android:hint="Update Task"
+                android:layout_gravity="bottom"
+                android:inputType="text"
+                />
+
+            <EditText
+                android:id="@+id/editTextMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="MM"
+                android:layout_gravity="bottom"
+                android:inputType="date" />
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="DD"
+                android:layout_gravity="bottom"
+                android:inputType="date" />
+            <EditText
+                android:id="@+id/editTextYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:hint="YYYY"
+                android:layout_gravity="bottom"
+                android:inputType="date" />
+            <Button
+                android:id="@+id/editContent"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/teal_700"
+                android:textSize="20sp"
+                android:layout_gravity="bottom"
+
+                android:inputType="textPersonName"
+                android:text="✓" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    </LinearLayout>

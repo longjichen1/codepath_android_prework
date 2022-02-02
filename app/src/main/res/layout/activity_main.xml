@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:allowBackup="false"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
@@ -70,21 +71,21 @@
                 android:hint="Add a Task" />
 
             <EditText
-                android:id="@+id/editTextMonth"
+                android:id="@+id/addTextMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="MM"
                 android:layout_gravity="bottom"
                 android:inputType="date" />
             <EditText
-                android:id="@+id/editTextDate"
+                android:id="@+id/addTextDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="DD"
                 android:layout_gravity="bottom"
                 android:inputType="date" />
             <EditText
-                android:id="@+id/editTextYear"
+                android:id="@+id/addTextYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"

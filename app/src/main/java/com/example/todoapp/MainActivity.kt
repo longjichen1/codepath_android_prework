@@ -1,30 +1,34 @@
 package com.example.todoapp
 
 import android.content.ContentValues
-import androidx.appcompat.app.AppCompatActivity
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
-import java.nio.charset.Charset
 
+var listOfTasks = mutableListOf<String>()
+var listOfCards = mutableListOf<TaskCard>()
+var pos:Int = 0
+lateinit var helper: MyDBHelper
 class MainActivity : AppCompatActivity() {
 
-    var listOfTasks = mutableListOf<String>()
+
     lateinit var adapter: TaskItemAdapter
 
     var listOfCards = mutableListOf<TaskCard>()
     lateinit var adapter2: TaskCardAdapter
 
 
-    lateinit var helper: MyDBHelper
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,11 +38,51 @@ class MainActivity : AppCompatActivity() {
         loadItems()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fun newIntent(position:Int){
+            val clickedCard = listOfCards[position]
 
+            val dialog = AlertDialog.Builder(applicationContext)
+            dialog.setTitle("Update ToDo")
+            val view = layoutInflater.inflate(R.layout.dialog_layout, null)
+            val taskField = view.findViewById<EditText>(R.id.editTaskField)
+            taskField.setText(clickedCard.task)
+            val dayField = view.findViewById<EditText>(R.id.editTextDate)
+            dayField.setText(clickedCard.task)
+            val monthField = view.findViewById<EditText>(R.id.editTextMonth)
+            monthField.setText(clickedCard.task)
+            val yearField = view.findViewById<EditText>(R.id.editTextYear)
+            yearField.setText(clickedCard.task)
+            dialog.setView(view)
+            dialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
+                if (taskField.text.isNotEmpty()) {
+                    val tk: TaskCard = TaskCard(taskField.text.toString(), dayField.text.toString().toIntOrNull()?:-1, monthField.text.toString().toIntOrNull()?:-1, yearField.text.toString().toIntOrNull()?:-1)
+                    val wdb = helper.writableDatabase
+                    val cv = ContentValues()
+                }
+            }
+            dialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
+
+            }
+            dialog.show()
+        }
+        val d = this
         val onLongClickListener2 = object : TaskCardAdapter.OnLongClickListener {
             override fun onCardLongClicked(position: Int) {
-                // Edit card
-                saveItems()
+                val intent = Intent(d, MainActivity2::class.java)
+                val card = listOfCards[position]
+                val selectQuery = "SELECT * FROM TASKCARDS WHERE TASK='${card.task}'"
+                val ds = helper.writableDatabase
+                val cursor = ds.rawQuery(selectQuery, null)
+
+                cursor.moveToFirst()
+
+                intent.putExtra("HI", cursor.getInt(0))
+                Log.i("SIZE", listOfCards.size.toString())
+                startActivityForResult(intent, 2)
+                Log.e("intent", "NOT")
+                loadItems()
+
+                adapter2.notifyDataSetChanged()
             }
         }
 
@@ -73,9 +117,9 @@ class MainActivity : AppCompatActivity() {
 
         // Set up input field
         val inputTextField = findViewById<EditText>(R.id.addTaskField)
-        val inputMonth = findViewById<EditText>(R.id.editTextMonth)
-        val inputDay= findViewById<EditText>(R.id.editTextDate)
-        val inputYear = findViewById<EditText>(R.id.editTextYear)
+        val inputMonth = findViewById<EditText>(R.id.addTextMonth)
+        val inputDay= findViewById<EditText>(R.id.addTextDate)
+        val inputYear = findViewById<EditText>(R.id.addTextYear)
 
         // Clear All Tasks
         findViewById<Button>(R.id.clearTasks).setOnClickListener{
@@ -135,10 +179,11 @@ class MainActivity : AppCompatActivity() {
             val selectQuery = "SELECT * FROM TASKCARDS"
             val ds = helper.writableDatabase
             val cursor = ds.rawQuery(selectQuery, null)
-
+            Log.e("init", cursor.columnNames.size.toString())
             if (cursor.moveToFirst()){
 
                 do{
+                    Log.e("USERID", cursor.getInt(0).toString())
                     listOfCards.add(TaskCard(cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)))
                 }while(cursor.moveToNext())
 
@@ -159,6 +204,17 @@ class MainActivity : AppCompatActivity() {
             getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){
             ioException.printStackTrace()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // check if the request code is same as what is passed  here it is 2
+        if (requestCode == 2) {
+
+            loadItems()
+            adapter2.notifyDataSetChanged()
+
         }
     }
 }
