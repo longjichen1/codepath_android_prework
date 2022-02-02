@@ -24,7 +24,7 @@ The following **additional** features are implemented:
 * [ ] User input includes Month, Date, and Year so that users can add a due date to a task
 * [ ] User input includes input validation, checking if the taskField is empty or not and if the date is a valid date or not
 * [ ] User date is sanitized, allowing for dates to be properly displayed (i.e. month is stored as integers from 1 to 12 mapped to different string values for their corresponding month, and the day and year cannot be displayed without a valid month)
-* [ ] Clear all tasks button allowing for users to get rid of very single task easily
+* [ ] Clear all tasks button allowing for users to get rid of every single task easily
 * [ ] Improved UI
 * [ ] Update activity and page displays the selected task's information to allow users an intuitive way to update their task. The information is also validated, meaning if there is an invalid number, the existing data is not displayed and instead the input field **hint** is displayed.
 
