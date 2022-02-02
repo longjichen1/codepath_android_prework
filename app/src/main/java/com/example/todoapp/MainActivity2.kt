@@ -24,10 +24,11 @@ class MainActivity2 : AppCompatActivity() {
         val intent = getIntent()
 
         val position = intent.getIntExtra("HI", 0)
-        val ds = helper.readableDatabase
-        Log.e("OPS", position.toString())
+        val ds = helper.writableDatabase
 
-        val k = ds.rawQuery("SELECT TASK FROM TASKCARDS WHERE TASKCARDID='$position' AND TASK='asdf' AND DAY!='-1'", null)
+        Log.e("OPS", position.toString())
+        val args = arrayOf("TASKCARDID", "TASK", "DAY", "MONTH", "YEAR")
+        val k = ds.query("TASKCARDS", args, "TASKCARDID='${position}'", null, null, null, null)
 
         Log.e("adf", k.columnNames.size.toString())
         k.moveToFirst()
@@ -41,14 +42,16 @@ class MainActivity2 : AppCompatActivity() {
         val monthField: EditText = findViewById(R.id.editTextMonth)
         val yearField: EditText = findViewById(R.id.editTextYear)
         val origTask = textField.text.toString()
-//        textField.setText(k.getString(0))
-
+        textField.setText(k.getString(1))
+        dayField.setText(k.getInt(2).toString())
+        monthField.setText(k.getInt(3).toString())
+        yearField.setText(k.getInt(4).toString())
         Log.e("adf", k.columnNames.size.toString())
 
         viewButton.setOnClickListener{
 //
 //
-                val card = TaskCard(textField.text.toString(), 0, 0, 0)
+                val card = TaskCard(textField.text.toString(), dayField.text.toString().toIntOrNull()?:-1, monthField.text.toString().toIntOrNull()?:-1, yearField.text.toString().toIntOrNull()?:-1)
                 var cv = ContentValues()
 
                 cv.put("TASK", card.task)

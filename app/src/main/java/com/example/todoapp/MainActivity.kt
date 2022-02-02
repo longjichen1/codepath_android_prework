@@ -211,7 +211,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
+            val ds = helper.writableDatabase
 
+            val args = arrayOf("TASK", "DAY", "MONTH", "YEAR")
+            val k = ds.query("TASKCARDS", args, null, null, null, null, null)
+
+            Log.e("ad124f", k.columnNames.size.toString())
             loadItems()
             adapter2.notifyDataSetChanged()
 

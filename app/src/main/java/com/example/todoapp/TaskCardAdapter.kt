@@ -34,9 +34,9 @@ class TaskCardAdapter(val taskCards: List<TaskCard>,
         holder.taskView.text = taskcard.task
         var date: String = months[taskcard.month] + ' '
         Log.println(Log.ERROR, "Day", taskcard.day.toString())
-        if (taskcard.day.toString() != "-1") date+= taskcard.day.toString() + ' '
-        if (taskcard.year.toString() != "-1") date+= (taskcard.year.toString() + ' ')
-        if (taskcard.month == -1) date = ""
+        if (taskcard.day.toString() != "-1" && taskcard.day > 0 && taskcard.day < 31) date+= taskcard.day.toString() + ' '
+        if (taskcard.year.toString() != "-1" && taskcard.year>2000 && taskcard.year<3000) date+= (taskcard.year.toString() + ' ')
+        if (taskcard.month <= 0 || taskcard.month > 12) date = ""
         holder.dateView.text = date
     }
 
