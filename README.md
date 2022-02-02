@@ -40,13 +40,13 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 Describe any challenges encountered while building the app.
 
-###The main challenges I encountered while working on this app revolved around storing more than just the task name. Implementing a card-like approach required 3 main things that I found some difficulty with:
+### The main challenges I encountered while working on this app revolved around storing more than just the task name. Implementing a card-like approach required 3 main things that I found some difficulty with:
 
-###1. Storing the data
+### 1. Storing the data
 
-###2. Creating a custom adapter to display the Task Cards
+### 2. Creating a custom adapter to display the Task Cards
 
-###3. Creating a new activity to prompt users to edit their task and due dates
+### 3. Creating a new activity to prompt users to edit their task and due dates
 
 ## License
 
