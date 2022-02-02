@@ -44,7 +44,11 @@ Describe any challenges encountered while building the app.
 
 ### 1. Storing the data
 
+Storing the data of string task names were covered in the tutorial using FileUtils and writing to a text data file; however, with multiple data fields per data point, using this method would not suffice. Thus, I had to find a way to store more complex data in a table format. I first tried using ROOM database, however, I quickly ran into some issues and decided that it was in my best interest to look for a different method. Ultimately, I came across SQLite which was relatively simple to use and didn't have too many complexities regarding the storage--perfect for storing a simple task card. Changing the program to store and load items from a text file to an SQL database was quite challenging, but I ultimately figured out how to access the database using MyDBHelper (Custom database kt file) using writable/redable database and rawQuery. Overall, I learned how to use a simple database and how to access the database using rawQuery.
+
 ### 2. Creating a custom adapter to display the Task Cards
+
+The original task list in the base todo app was very bland and had no real structure. Each list item did not have a real distinction between one item and the next, but rather, they were simply separated by spacing. In order to implement a more user intuitive task list that also included due dates, I had to implement a custom adapter to display the multiple data fields in a nice layout. The main challenge regarding this process involved accessing multiple views based on the input field (i.e. taskName, dayInput, yearInput, monthInput). Initially I could not access the specific ID's and consequentially the input fields; however, I eventually figured out that I had to initialize the views in the Inner ViewHolder class in order to access them. Ultimately, I gained a deeper understanding of how the layouts work together with the activity files of the app.
 
 ### 3. Creating a new activity to prompt users to edit their task and due dates
 
