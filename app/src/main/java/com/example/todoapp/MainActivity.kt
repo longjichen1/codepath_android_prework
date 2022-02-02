@@ -15,21 +15,12 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 
-var listOfTasks = mutableListOf<String>()
-var listOfCards = mutableListOf<TaskCard>()
-var pos:Int = 0
 lateinit var helper: MyDBHelper
 class MainActivity : AppCompatActivity() {
 
 
-    lateinit var adapter: TaskItemAdapter
-
     var listOfCards = mutableListOf<TaskCard>()
     lateinit var adapter2: TaskCardAdapter
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         helper = MyDBHelper(applicationContext)
@@ -38,33 +29,8 @@ class MainActivity : AppCompatActivity() {
         loadItems()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fun newIntent(position:Int){
-            val clickedCard = listOfCards[position]
 
-            val dialog = AlertDialog.Builder(applicationContext)
-            dialog.setTitle("Update ToDo")
-            val view = layoutInflater.inflate(R.layout.dialog_layout, null)
-            val taskField = view.findViewById<EditText>(R.id.editTaskField)
-            taskField.setText(clickedCard.task)
-            val dayField = view.findViewById<EditText>(R.id.editTextDate)
-            dayField.setText(clickedCard.task)
-            val monthField = view.findViewById<EditText>(R.id.editTextMonth)
-            monthField.setText(clickedCard.task)
-            val yearField = view.findViewById<EditText>(R.id.editTextYear)
-            yearField.setText(clickedCard.task)
-            dialog.setView(view)
-            dialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
-                if (taskField.text.isNotEmpty()) {
-                    val tk: TaskCard = TaskCard(taskField.text.toString(), dayField.text.toString().toIntOrNull()?:-1, monthField.text.toString().toIntOrNull()?:-1, yearField.text.toString().toIntOrNull()?:-1)
-                    val wdb = helper.writableDatabase
-                    val cv = ContentValues()
-                }
-            }
-            dialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
 
-            }
-            dialog.show()
-        }
         val d = this
         val onLongClickListener2 = object : TaskCardAdapter.OnLongClickListener {
             override fun onCardLongClicked(position: Int) {
@@ -77,9 +43,7 @@ class MainActivity : AppCompatActivity() {
                 cursor.moveToFirst()
 
                 intent.putExtra("HI", cursor.getInt(0))
-                Log.i("SIZE", listOfCards.size.toString())
                 startActivityForResult(intent, 2)
-                Log.e("intent", "NOT")
                 loadItems()
 
                 adapter2.notifyDataSetChanged()
@@ -103,8 +67,6 @@ class MainActivity : AppCompatActivity() {
                 // 2. Notify adapter
                 adapter2.notifyDataSetChanged()
 
-                // 3. Save File
-                saveItems()
             }
         }
 
@@ -140,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                     inputMonth.text.toString().toIntOrNull()?:-1,
                     inputYear.text.toString().toIntOrNull()?:-1);
                 // 2. Add the string to our list of tasks: listofTasks
-                listOfTasks.add(userInputtedTask)
                 listOfCards.add(card)
                 var cv = ContentValues()
 
@@ -157,8 +118,6 @@ class MainActivity : AppCompatActivity() {
                 inputDay.setText("")
                 inputMonth.setText("")
                 inputYear.setText("")
-                // 4. Save File
-                saveItems()
             }
         }
     }
@@ -181,27 +140,11 @@ class MainActivity : AppCompatActivity() {
             val cursor = ds.rawQuery(selectQuery, null)
             Log.e("init", cursor.columnNames.size.toString())
             if (cursor.moveToFirst()){
-
                 do{
                     Log.e("USERID", cursor.getInt(0).toString())
                     listOfCards.add(TaskCard(cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)))
                 }while(cursor.moveToNext())
-
             }
-
-//            listOfTasks = FileUtils.readLines(getDataFile(), Charset.defaultCharset())
-            getDataFile().forEachLine{println(it)}
-        } catch (ioException: IOException){
-            ioException.printStackTrace()
-        }
-    }
-
-    // Save items by writing them into our data file
-    fun saveItems() {
-        try{
-
-            FileUtils.writeLines(getDataFile(), listOfCards)
-            getDataFile().forEachLine{println(it)}
         } catch (ioException: IOException){
             ioException.printStackTrace()
         }
@@ -211,15 +154,8 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
-            val ds = helper.writableDatabase
-
-            val args = arrayOf("TASK", "DAY", "MONTH", "YEAR")
-            val k = ds.query("TASKCARDS", args, null, null, null, null, null)
-
-            Log.e("ad124f", k.columnNames.size.toString())
             loadItems()
             adapter2.notifyDataSetChanged()
-
         }
     }
 }

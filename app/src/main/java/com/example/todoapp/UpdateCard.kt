@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.todoapp.databinding.ActivityMain2Binding
+
 import org.w3c.dom.Text
 
 class MainActivity2 : AppCompatActivity() {
@@ -41,33 +41,31 @@ class MainActivity2 : AppCompatActivity() {
         val dayField: EditText = findViewById(R.id.editTextDate)
         val monthField: EditText = findViewById(R.id.editTextMonth)
         val yearField: EditText = findViewById(R.id.editTextYear)
-        val origTask = textField.text.toString()
+
         textField.setText(k.getString(1))
-        dayField.setText(k.getInt(2).toString())
-        monthField.setText(k.getInt(3).toString())
-        yearField.setText(k.getInt(4).toString())
+        if (k.getInt(2) > 0 && k.getInt(2)< 31) dayField.setText(k.getInt(2).toString())
+        if (k.getInt(3) > 0 && k.getInt(3) <= 12) monthField.setText(k.getInt(3).toString())
+        if (k.getInt(4) > 2000 && k.getInt(4) < 3000) yearField.setText(k.getInt(4).toString())
         Log.e("adf", k.columnNames.size.toString())
 
         viewButton.setOnClickListener{
-//
-//
-                val card = TaskCard(textField.text.toString(), dayField.text.toString().toIntOrNull()?:-1, monthField.text.toString().toIntOrNull()?:-1, yearField.text.toString().toIntOrNull()?:-1)
-                var cv = ContentValues()
+                if (textField.text.isNotEmpty()){
+                    val card = TaskCard(textField.text.toString(), dayField.text.toString().toIntOrNull()?:-1, monthField.text.toString().toIntOrNull()?:-1, yearField.text.toString().toIntOrNull()?:-1)
+                    var cv = ContentValues()
 
-                cv.put("TASK", card.task)
-                cv.put("DAY", card.day)
-                cv.put("MONTH", card.month)
-                cv.put("YEAR", card.year)
+                    cv.put("TASK", card.task)
+                    cv.put("DAY", card.day)
+                    cv.put("MONTH", card.month)
+                    cv.put("YEAR", card.year)
 
-                val db = MyDBHelper(applicationContext)
-                val dbs = db.writableDatabase
-                ds.delete("TASKCARDS", "TASKCARDID='$position'", null)
+                    val db = MyDBHelper(applicationContext)
+                    val dbs = db.writableDatabase
+                    ds.delete("TASKCARDS", "TASKCARDID='$position'", null)
 
-                dbs.insert("TASKCARDS", null, cv)
-                setResult(2, intent)
-                finish()
-//
-//            Log.i("hi", "RUN")
+                    dbs.insert("TASKCARDS", null, cv)
+                    setResult(2, intent)
+                    finish()
+                }
         }
     }
 }
